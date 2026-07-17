@@ -4,29 +4,18 @@ using namespace std;
 
 class Solution {
 
-    struct Compare{
-        bool operator()(const vector<int>& a, const vector<int>& b) const{
-            return a[0] < b[0];
-        }
-    };
-
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
         
         vector<vector<int>> ret;
 
-        sort(intervals.begin(), intervals.end(), Compare());
+        sort(intervals.begin(), intervals.end());
 
         for(const auto& cur : intervals){
-            bool pass = false;
-            for(int i=0; i<ret.size();i++){
-                if(cur[1] <= ret[i][1] || cur[0] <= ret[i][1]){
-                    ret[i][1] = max(ret[i][1], cur[1]);
-                    pass = true;
-                    break;
-                }
+            if(ret.size() != 0 && cur[0] <= ret.back()[1]){
+                ret.back()[1] = max(ret.back()[1], cur[1]);
             }
-            if(!pass)
+            else
                 ret.push_back(cur);
         }
 
