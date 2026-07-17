@@ -3,26 +3,31 @@
 using namespace std;
 
 class Solution {
+
+    struct Compare{
+        bool operator()(const vector<int>& a, const vector<int>& b) const{
+            return a[0] < b[0];
+        }
+    };
+
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
-        vector<int> res;
-        for(auto cur : intervals){
-            for(int i=cur[0]; i<= cur[1]; i++){
-                res.push_back(i);
-            }
-        }
-        sort(res.begin(), res.end());
-
+        
         vector<vector<int>> ret;
 
-        int i=0;
-        while(i<res.size()){
-            vector<int> temp;
-            temp.push_back(res[i]);
-            while(i+1 < res.size() && res[i+1] - res[i] <=1)
-                i++;
-            temp.push_back(res[i++]);
-            ret.push_back(temp);
+        sort(intervals.begin(), intervals.end(), Compare());
+
+        for(const auto& cur : intervals){
+            bool pass = false;
+            for(int i=0; i<ret.size();i++){
+                if(cur[1] <= ret[i][1] || cur[0] <= ret[i][1]){
+                    ret[i][1] = max(ret[i][1], cur[1]);
+                    pass = true;
+                    break;
+                }
+            }
+            if(!pass)
+                ret.push_back(cur);
         }
 
         return ret;
