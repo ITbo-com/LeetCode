@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 class Solution {
 public:
     int change(int amount, vector<int>& coins) {
@@ -10,12 +9,18 @@ public:
 
         dp[0] = 1;
         for(int j=0; j<coins.size(); j++){
+            vector<bool> used(amount+1, false);
+            used[0] = true;
             for(int i=0; i<= amount; i++){
+                
                 if(i-coins[j] >= 0 && dp[i-coins[j]] > 0){
-                    if (dp[i] == dp[i-coins[j]])
+                    if (!used[i-coins[j]]){
                         dp[i] += dp[i-coins[j]]+1;
+                    }
                     else
                         dp[i] += dp[i-coins[j]];
+                    
+                    used[i] = true;
                 }
             }
         }
